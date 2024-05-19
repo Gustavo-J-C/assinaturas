@@ -15,11 +15,15 @@ session_start();
 </head>
 <body>
     <div class="container">
-        <form class="form" action="submit_form.php" method="post">
+        <form class="form" action="generate_pdf.php" method="post">
             <h2>Dados do Beneficiário(a)</h2>
             <div class="form-group">
-                <label for="nome">Nome Completo</label>
-                <input type="text" id="nome" name="nome" required>
+                <label for="nome_completo">Nome Completo</label>
+                <input type="text" id="nome_completo" name="nome_completo" required>
+            </div>
+            <div class="form-group">
+                <label for="email_beneficiario">Email</label>
+                <input type="text" id="email_beneficiario" name="email_beneficiario" required>
             </div>
             <div class="form-row">
                 <div class="form-group">
@@ -38,6 +42,10 @@ session_start();
                         <!-- Outras opções -->
                     </select>
                 </div>
+            </div>
+            <div class="form-group">
+                <label for="contato">Contato</label>
+                <input type="text" id="contato" name="contato" required>
             </div>
             <div class="form-group">
                 <label for="cep">CEP</label>
@@ -75,12 +83,12 @@ session_start();
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label for="registro_conar">Registro CONAR</label>
-                    <input type="text" id="registro_conar" name="registro_conar" required>
+                    <label for="registro_conar">Registro CGADB</label>
+                    <input type="text" id="registro_cgadb" name="registro_cgadb" required>
                 </div>
                 <div class="form-group">
-                    <label for="registro_cread">Registro CREAD</label>
-                    <input type="text" id="registro_cread" name="registro_cread" required>
+                    <label for="registro_cread">Registro CGADEB</label>
+                    <input type="text" id="registro_cgadeb" name="registro_cgadeb" required>
                 </div>
                 <div class="form-group">
                     <label for="cpf_pastor">CPF</label>
@@ -89,12 +97,12 @@ session_start();
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label for="contato_whatsapp">Contato "Whatsapp"</label>
-                    <input type="text" id="contato_whatsapp" name="contato_whatsapp" required>
+                    <label for="contato_pastor">Contato "Whatsapp"</label>
+                    <input type="text" id="contato_pastor" name="contato_pastor" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="email_pastor">E-mail</label>
+                    <input type="email_pastor" id="email_pastor" name="email_pastor" required>
                 </div>
             </div>
             <button type="submit" class="btn-submit">Próximo</button>
