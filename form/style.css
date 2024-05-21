@@ -6,6 +6,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 100vh;
 }
 
 .container {
@@ -15,6 +16,7 @@ body {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
 h2 {
@@ -40,10 +42,11 @@ h2 {
 }
 
 .form-group input, .form-group select {
-    width: calc(100% - 20px);
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .form-row {
@@ -55,11 +58,11 @@ h2 {
 .form-row .form-group {
     flex: 1;
     min-width: calc(50% - 10px);
+    box-sizing: border-box;
 }
 
 .btn-submit {
-    width: 25%;
-    align-self: center;
+    width: 100%;
     padding: 15px;
     background-color: #007bff;
     border: none;
@@ -67,6 +70,7 @@ h2 {
     border-radius: 4px;
     cursor: pointer;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .btn-submit:hover {
@@ -85,9 +89,12 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Responsividade */
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
     .form-row .form-group {
         min-width: 100%;
+    }
+
+    .btn-submit {
+        width: 100%;
     }
 }

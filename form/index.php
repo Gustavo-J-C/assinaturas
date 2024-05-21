@@ -8,14 +8,17 @@ session_start();
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
     <title>Formulário</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
-        <form class="form" action="generate_pdf.php" method="post">
+        <form class="form" action="generate_pdf.php" method="post" onsubmit="return validarFormulario();">
             <h2>Dados do Beneficiário(a)</h2>
             <div class="form-group">
                 <label for="nome_completo">Nome Completo</label>
@@ -75,7 +78,7 @@ session_start();
                     <input type="text" id="estado" name="estado" required>
                 </div>
             </div>
-            
+
             <h2>Dados do Congregacionais</h2>
             <div class="form-group">
                 <label for="nome_pastor">Nome Completo do Pastor Presidente</label>
@@ -83,11 +86,11 @@ session_start();
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label for="registro_conar">Registro CGADB</label>
+                    <label for="registro_cgadb">Registro CGADB</label>
                     <input type="text" id="registro_cgadb" name="registro_cgadb" required>
                 </div>
                 <div class="form-group">
-                    <label for="registro_cread">Registro CGADEB</label>
+                    <label for="registro_cgadeb">Registro CGADEB</label>
                     <input type="text" id="registro_cgadeb" name="registro_cgadeb" required>
                 </div>
                 <div class="form-group">
@@ -102,12 +105,171 @@ session_start();
                 </div>
                 <div class="form-group">
                     <label for="email_pastor">E-mail</label>
-                    <input type="email_pastor" id="email_pastor" name="email_pastor" required>
+                    <input type="text" id="email_pastor" name="email_pastor" required>
                 </div>
             </div>
             <button type="submit" class="btn-submit">Próximo</button>
         </form>
         <a href="logout.php">Logout</a>
     </div>
+    <script>
+
+
+        function formatarRG() {
+            var rg = document.getElementById('rg');
+            var rgValue = rg.value.replace(/\D/g, '');
+            var formattedRg = rgValue.replace(/(\d{2})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            rg.value = formattedRg;
+        }
+
+        function formatarCPF() {
+            var cpf = document.getElementById('cpf');
+            var cpfValue = cpf.value.replace(/\D/g, '');
+            var formattedCpf = cpfValue.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            cpf.value = formattedCpf;
+        }
+
+        function formatarCEP() {
+            var cep = document.getElementById('cep');
+            var cepValue = cep.value.replace(/\D/g, '');
+            var formattedCep = cepValue.replace(/(\d{5})(\d{3})/, '$1-$2');
+            cep.value = formattedCep;
+        }
+
+        function formatarContato() {
+            var contato = document.getElementById('contato');
+            var contatoValue = contato.value.replace(/\D/g, '');
+            var formattedContato = contatoValue.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            contato.value = formattedContato;
+        }
+
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/[^\d]+/g, '');
+            if (cpf == '') return false;
+            // Elimina CPFs invalidos conhecidos
+            if (cpf.length != 11 ||
+                cpf == "00000000000" ||
+                cpf == "11111111111" ||
+                cpf == "22222222222" ||
+                cpf == "33333333333" ||
+                cpf == "44444444444" ||
+                cpf == "55555555555" ||
+                cpf == "66666666666" ||
+                cpf == "77777777777" ||
+                cpf == "88888888888" ||
+                cpf == "99999999999")
+                return false;
+            // Valida 1o digito
+            add = 0;
+            for (i = 0; i < 9; i++)
+                add += parseInt(cpf.charAt(i)) * (10 - i);
+            rev = 11 - (add % 11);
+            if (rev == 10 || rev == 11)
+                rev = 0;
+            if (rev != parseInt(cpf.charAt(9)))
+                return false;
+            // Valida 2o digito
+            add = 0;
+            for (i = 0; i < 10; i++)
+                add += parseInt(cpf.charAt(i)) * (11 - i);
+            rev = 11 - (add % 11);
+            if (rev == 10 || rev == 11)
+                rev = 0;
+            if (rev != parseInt(cpf.charAt(10)))
+                return false;
+            return true;
+        }
+
+        function validarEmail(email) {
+            var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validarTelefone(telefone) {
+            var re = /^\d{10,11}$/;
+            return re.test(telefone);
+        }
+
+        function validarFormulario( cepBeneficiario, emailBeneficiario, cpfBeneficiario, contatoBeneficiario, emailPastor, cpfPastor, contatoPastor) {
+
+            if (!validarEmail(emailBeneficiario)) {
+                alert('Email do beneficiário inválido.');
+                return false;
+            }
+
+            if (!validarCPF(cpfBeneficiario)) {
+                alert('CPF do beneficiário inválido.');
+                return false;
+            }
+
+            if (!validarTelefone(contatoBeneficiario)) {
+                alert('Contato do beneficiário inválido. Deve conter apenas números e ter 10 ou 11 dígitos.');
+                return false;
+            }
+
+            if (!validarEmail(emailPastor)) {
+                alert('Email do pastor inválido.');
+                return false;
+            }
+
+            if (!validarCPF(cpfPastor)) {
+                alert('CPF do pastor inválido.');
+                return false;
+            }
+
+            if (!validarTelefone(contatoPastor)) {
+                alert('Contato do pastor inválido. Deve conter apenas números e ter 10 ou 11 dígitos.');
+                return false;
+            }
+
+            return true;
+        }
+
+        async function enviarFormulario(event) {
+            event.preventDefault(); 
+            
+            var cepBeneficiario = document.getElementById('cep').value.replace(/[.-]/g, '');
+            var emailBeneficiario = document.getElementById('email_beneficiario').value;
+            var cpfBeneficiario = document.getElementById('cpf').value.replace(/[.-]/g, '');
+            var contatoBeneficiario = document.getElementById('contato').value.replace(/[.-]/g, '');
+            var emailPastor = document.getElementById('email_pastor').value;
+            var cpfPastor = document.getElementById('cpf_pastor').value.replace(/[.-]/g, '');
+            var contatoPastor = document.getElementById('contato_pastor').value.replace(/[.-]/g, '');
+
+            validarFormulario(cepBeneficiario, emailBeneficiario, cpfBeneficiario, contatoBeneficiario, emailPastor, cpfPastor, contatoPastor);
+
+            var formData = new FormData(document.getElementById('myForm'));
+
+            // Remover pontos e hífens dos valores
+            formData.set('nome_completo', formData.get('rg').replace(/[.-]/g, ''));
+            formData.set('cpf', formData.get('cpf').replace(/[.-]/g, ''));
+            formData.set('contato', formData.get('contato').replace(/[.-]/g, ''));
+            formData.set('cep', formData.get('cep').replace(/[.-]/g, ''));
+
+            try {
+                const response = await fetch('generate_pdf.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao enviar o formulário.');
+                }
+
+                const data = await response.text();
+                console.log(data); // Você pode tratar a resposta aqui
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
+        document.getElementById('rg').addEventListener('input', formatarRG);
+        document.getElementById('cpf').addEventListener('input', formatarCPF);
+        document.getElementById('cpf_pastor').addEventListener('input', formatarCPF);
+        document.getElementById('contato').addEventListener('input', formatarContato);
+        document.getElementById('contato_pastor').addEventListener('input', formatarContato);
+        document.getElementById('cep').addEventListener('input', formatarCEP);
+    </script>
 </body>
+
 </html>

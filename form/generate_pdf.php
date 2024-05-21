@@ -1,20 +1,19 @@
 <?php
-require ('../modules/pdf/fpdf/fpdf.php');
+require_once('../modules/pdf/fpdf/fpdf.php');
+require_once('../modules/pdf/fpdi/src/autoload.php');
 
-class PDF extends FPDF
+use setasign\Fpdi\Fpdi;
+
+class PDF extends Fpdi
 {
     function Header()
     {
-        $this->SetFont('Arial', 'B', 12);
-        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Contrato de Concessão de Benefício'), 0, 1, 'C');
-        $this->Ln(10);
+        // No header needed as we use an existing PDF
     }
 
     function Footer()
     {
-        $this->SetY(-15);
-        $this->SetFont('Arial', 'I', 8);
-        $this->Cell(0, 10, 'Page ' . $this->PageNo(), 0, 0, 'C');
+        // No footer needed as we use an existing PDF
     }
 }
 
@@ -26,57 +25,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         "RG" => $_POST['rg'],
         "CPF" => $_POST['cpf'],
         "contato" => $_POST['contato'],
-        "Estado Civil" => $_POST['estado_civil'],
-        "Telefone" => $_POST['contato'],
+        "estado_civil" => $_POST['estado_civil'],
         "CEP" => $_POST['cep'],
-        "Endereço" => $_POST['endereco'],
-        "Complemento" => $_POST['complemento'],
-        "Bairro" => $_POST['bairro'],
-        "Cidade" => $_POST['cidade'],
-        "Estado" => $_POST['estado'],
+        "endereco" => $_POST['endereco'],
+        "complemento" => $_POST['complemento'],
+        "bairro" => $_POST['bairro'],
+        "cidade" => $_POST['cidade'],
+        "estado" => $_POST['estado'],
         "pastor_nome" => $_POST['nome_pastor'],
-        "Registro CGADB" => $_POST['registro_cgadb'],
-        "Registro CGADEB" => $_POST['registro_cgadeb'],
-        "CPF do Pastor" => $_POST['cpf_pastor'],
+        "registro_cgadb" => $_POST['registro_cgadb'],
+        "registro_cgadeb" => $_POST['registro_cgadeb'],
+        "cpf_pastor" => $_POST['cpf_pastor'],
         "pastor_contato" => $_POST['contato_pastor'],
         "pastor_email" => $_POST['email_pastor'],
-        "Data" => date("d/m/Y")
+        "data" => date("d/m/Y")
     ];
 
-    // Create instance of FPDF
+    // Create instance of FPDI
     $pdf = new PDF();
     $pdf->AddPage();
+
+    // Set the source PDF file
+    $pageCount = $pdf->setSourceFile('./Declaração_ceadeb_Beneficiario.pdf');
+    $tplIdx = $pdf->importPage(1);
+    $pdf->useTemplate($tplIdx, 0, 0, null, null, true);
+
+    // Set font
     $pdf->SetFont('Arial', '', 12);
 
-    // Add contract content to PDF
-    $pdf->Cell(0, 10, "Partes:", 0, 1);
-    foreach ($formData as $key => $value) {
-        $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "$key: $value"), 0, 1);
-    }
-    $pdf->Ln();
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Considerando que:"), 0, 1);
-    $pdf->MultiCell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "A CEADEB concede benefícios aos seus membros de acordo com critérios estabelecidos;\n\nO Beneficiário atende aos critérios estabelecidos para a concessão do benefício;\n\nAmbas as partes concordam com os termos e condições deste contrato."));
-    $pdf->Ln();
-    $pdf->Cell(0, 10, "Acordo:", 0, 1);
-    $pdf->MultiCell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Objeto:\n1.1 A CEADEB concorda em conceder o benefício ao Beneficiário de acordo com os critérios estabelecidos pela organização.\n\nObrigações da CEADEB:\n2.1 A CEADEB compromete-se a fornecer ao Beneficiário os benefícios acordados de forma oportuna e conforme descrito nos regulamentos internos.\n\nObrigações do Beneficiário:\n3.1 O Beneficiário concorda em cumprir os requisitos estabelecidos para a concessão do benefício e em fornecer informações precisas e atualizadas à CEADEB.\n\nAssinaturas Eletrônicas:\n4.1 O Beneficiário concorda em assinar eletronicamente este contrato através da plataforma Zap Sign, conforme instruções fornecidas pela CEADEB.\n\nVigência:\n5.1 Este contrato entra em vigor na data de assinatura eletrônica pelo Beneficiário e permanecerá em vigor até o término dos benefícios concedidos pela CEADEB."));
-    $pdf->Ln();
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Assinaturas:"), 0, 1);
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Por estar de acordo com os termos e condições deste contrato, as partes assinam eletronicamente:"), 0, 1);
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "CEADEB"), 0, 1);
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "[Assinatura Eletrônica da CEADEB]"), 0, 1);
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Data: " . $formData['Data']), 0, 1);
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Beneficiário"), 0, 1);
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "[Assinatura Eletrônica do Beneficiário]"), 0, 1);
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Data: " . $formData['Data']), 0, 1);
-    $pdf->Ln();
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Testemunhas:"), 0, 1);
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Nome: ___________________________________"), 0, 1);
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Assinatura: _______________________________"), 0, 1);
-    $pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "Data: ____________________________________"), 0, 1);
+    // Set the position and write the data
+    $pdf->SetXY(40, 118);
+    $pdf->Write(10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $formData['nome_beneficiario']));
 
-    // Output the PDF to a temporary file
+    $pdf->SetXY(40, 136);
+    $pdf->Write(10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $formData['estado_civil'] . '  --  ' . $formData['RG'] . '  --  ' . $formData['CPF']));
+
+    $pdf->SetXY(40, 154);
+    $pdf->Write(10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $formData['endereco'] . '  --  ' . $formData['CEP']));
+
+    $pdf->SetXY(40, 171);
+    $pdf->Write(10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $formData['bairro'] . '  --  ' . $formData['contato'] . '  --  ' . $formData['cidade']));
+
+    $pdf->SetXY(40, 188);
+    $pdf->Write(10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Salvador - BA   --   ' . date("d/m/Y")));
+
     $tempFileName = tempnam(sys_get_temp_dir(), 'contract');
     $pdf->Output($tempFileName, 'F');
+    $pdf->Output('D', 'form_data.pdf');
 
     // Read the temporary file as base64
     $base64Pdf = base64_encode(file_get_contents($tempFileName));
@@ -137,9 +132,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($httpCode == 200) {
         $result = json_decode($response, true);
-        echo "Document created successfully. Document ID: ";
+        echo "Document created successfully. Document ID: " . $result['id'];
     } else {
-        echo "Failed to create document. Response: " . $response, $httpCode;
+        echo "Failed to create document. Response: " . $response . " HTTP Code: " . $httpCode;
     }
 }
 ?>
