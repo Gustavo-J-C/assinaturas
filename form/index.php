@@ -18,7 +18,7 @@ session_start();
 
 <body>
     <div class="container">
-        <form class="form" action="generate_pdf.php" method="post" onsubmit="return validarFormulario();">
+        <form class="form" id="myForm" action="generate_pdf.php" method="post" >
             <h2>Dados do Beneficiário(a)</h2>
             <div class="form-group">
                 <label for="nome_completo">Nome Completo</label>
@@ -122,8 +122,8 @@ session_start();
             rg.value = formattedRg;
         }
 
-        function formatarCPF() {
-            var cpf = document.getElementById('cpf');
+        function formatarCPF(id) {
+            var cpf = document.getElementById(id);
             var cpfValue = cpf.value.replace(/\D/g, '');
             var formattedCpf = cpfValue.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
             cpf.value = formattedCpf;
@@ -136,8 +136,8 @@ session_start();
             cep.value = formattedCep;
         }
 
-        function formatarContato() {
-            var contato = document.getElementById('contato');
+        function formatarContato(id) {
+            var contato = document.getElementById(id);
             var contatoValue = contato.value.replace(/\D/g, '');
             var formattedContato = contatoValue.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
             contato.value = formattedContato;
@@ -190,7 +190,7 @@ session_start();
             return re.test(telefone);
         }
 
-        function validarFormulario( cepBeneficiario, emailBeneficiario, cpfBeneficiario, contatoBeneficiario, emailPastor, cpfPastor, contatoPastor) {
+        function validarFormulario(cepBeneficiario, emailBeneficiario, cpfBeneficiario, contatoBeneficiario, emailPastor, cpfPastor, contatoPastor) {
 
             if (!validarEmail(emailBeneficiario)) {
                 alert('Email do beneficiário inválido.');
@@ -226,8 +226,8 @@ session_start();
         }
 
         async function enviarFormulario(event) {
-            event.preventDefault(); 
-            
+            event.preventDefault();
+
             var cepBeneficiario = document.getElementById('cep').value.replace(/[.-]/g, '');
             var emailBeneficiario = document.getElementById('email_beneficiario').value;
             var cpfBeneficiario = document.getElementById('cpf').value.replace(/[.-]/g, '');
@@ -240,11 +240,26 @@ session_start();
 
             var formData = new FormData(document.getElementById('myForm'));
 
-            // Remover pontos e hífens dos valores
-            formData.set('nome_completo', formData.get('rg').replace(/[.-]/g, ''));
-            formData.set('cpf', formData.get('cpf').replace(/[.-]/g, ''));
-            formData.set('contato', formData.get('contato').replace(/[.-]/g, ''));
-            formData.set('cep', formData.get('cep').replace(/[.-]/g, ''));
+            var formData = new FormData();
+            formData.append('nome_beneficiario', document.getElementById('nome_completo').value);
+            formData.append('email_beneficiario', document.getElementById('email_beneficiario').value);
+            formData.append('RG', document.getElementById('rg').value.replace(/[.-]/g, ''));
+            formData.append('CPF', document.getElementById('cpf').value.replace(/[.-]/g, ''));
+            formData.append('contato', document.getElementById('contato').value.replace(/[.-]/g, ''));
+            formData.append('estado_civil', document.getElementById('estado_civil').value);
+            formData.append('CEP', document.getElementById('cep').value.replace(/[.-]/g, ''));
+            formData.append('endereco', document.getElementById('endereco').value);
+            formData.append('complemento', document.getElementById('complemento').value);
+            formData.append('bairro', document.getElementById('bairro').value);
+            formData.append('cidade', document.getElementById('cidade').value);
+            formData.append('estado', document.getElementById('estado').value);
+            formData.append('pastor_nome', document.getElementById('nome_pastor').value);
+            formData.append('registro_cgadb', document.getElementById('registro_cgadb').value);
+            formData.append('registro_cgadeb', document.getElementById('registro_cgadeb').value);
+            formData.append('cpf_pastor', document.getElementById('cpf_pastor').value.replace(/[.-]/g, ''));
+            formData.append('pastor_contato', document.getElementById('contato_pastor').value.replace(/[.-]/g, ''));
+            formData.append('pastor_email', document.getElementById('email_pastor').value);
+            formData.append('data', new Date().toLocaleDateString('pt-BR'));
 
             try {
                 const response = await fetch('generate_pdf.php', {
@@ -264,10 +279,10 @@ session_start();
         }
 
         document.getElementById('rg').addEventListener('input', formatarRG);
-        document.getElementById('cpf').addEventListener('input', formatarCPF);
-        document.getElementById('cpf_pastor').addEventListener('input', formatarCPF);
-        document.getElementById('contato').addEventListener('input', formatarContato);
-        document.getElementById('contato_pastor').addEventListener('input', formatarContato);
+        document.getElementById('cpf').addEventListener('input', () => formatarCPF('cpf'));
+        document.getElementById('cpf_pastor').addEventListener('input', () => formatarCPF('cpf_pastor'));
+        document.getElementById('contato').addEventListener('input', () => formatarContato('contato'));
+        document.getElementById('contato_pastor').addEventListener('input', () => formatarContato('contato_pastor'));
         document.getElementById('cep').addEventListener('input', formatarCEP);
     </script>
 </body>

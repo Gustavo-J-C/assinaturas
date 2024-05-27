@@ -1,6 +1,6 @@
 <?php
-require_once('../modules/pdf/fpdf/fpdf.php');
-require_once('../modules/pdf/fpdi/src/autoload.php');
+require_once ('../modules/pdf/fpdf/fpdf.php');
+require_once ('../modules/pdf/fpdi/src/autoload.php');
 
 use setasign\Fpdi\Fpdi;
 
@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $tempFileName = tempnam(sys_get_temp_dir(), 'contract');
     $pdf->Output($tempFileName, 'F');
-    $pdf->Output('D', 'form_data.pdf');
+    // $pdf->Output('D', 'form_data.pdf');
 
     // Read the temporary file as base64
     $base64Pdf = base64_encode(file_get_contents($tempFileName));
@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $apiKey = "";
 
     $data = [
-        "name" => "Contrato de teste",
+        "name" => "Contrato de " . $formData['nome_beneficiario'],
         "base64_pdf" => $base64Pdf,
         "external_id" => null,
         "signers" => [
@@ -91,10 +91,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 "email" => $formData['email_beneficiario'],
                 "auth_mode" => "assinaturaTela",
                 "send_automatic_email" => true,
-                "send_automatic_whatsapp" => false,
+                "send_automatic_whatsapp" => true,
                 "phone_country" => "55",
                 "phone_number" => $formData['contato'],
-                "require_selfie_photo" => false,
+                "require_selfie_photo" => true,
                 "require_document_photo" => true,
                 "selfie_validation_type" => "liveness-document-match"
             ],
@@ -103,16 +103,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 "email" => $formData['pastor_email'],
                 "auth_mode" => "assinaturaTela",
                 "send_automatic_email" => true,
-                "send_automatic_whatsapp" => false,
+                "send_automatic_whatsapp" => true,
                 "phone_country" => "55",
                 "phone_number" => $formData['pastor_contato'],
-                "require_selfie_photo" => false,
+                "require_selfie_photo" => true,
+                "blank_email" => false,
                 "require_document_photo" => true,
                 "selfie_validation_type" => "liveness-document-match"
             ]
         ],
         "lang" => "pt-br",
-        "brand_name" => "ChmHuster"
+        "created_by" => "gustavojsc9@gmail.com",
+        "disable_signer_emails" => false,
+        "brand_name" => "ChmHuster",
+        "signature_order_active" => false,
+        "observer" => ["gustavojsc9@gmail.com", "eronjr17.ej@gmail.com", "rodrigo.bessa@visionanalytics.tech"],
+        "reminder_every_n_days" => 0,
+        "allow_refuse_signature" => false,
+        "disable_signers_get_original_file" => false
     ];
 
     // Initialize cURL
@@ -131,10 +139,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     curl_close($ch);
 
     if ($httpCode == 200) {
-        $result = json_decode($response, true);
-        echo "Document created successfully. Document ID: " . $result['id'];
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     } else {
-        echo "Failed to create document. Response: " . $response . " HTTP Code: " . $httpCode;
+        echo "Failed to create document. Response: " . htmlspecialchars($response) . " HTTP Code: " . htmlspecialchars($httpCode);
     }
 }
 ?>
