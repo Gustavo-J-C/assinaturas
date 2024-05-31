@@ -1,12 +1,13 @@
 <?php
 session_start();
 
-var_dump($_SESSION['base64Pdf']);
+
 if (!isset($_SESSION['original_file'])) {
     echo "No file available.";
     exit();
 }
-$originalFile = $_SESSION['originalFile'];
+
+$originalFile = $_SESSION['original_file'];
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +55,7 @@ $originalFile = $_SESSION['originalFile'];
     <div class="container">
         <h1>Arquivo Original</h1>
         <p>O arquivo original está disponível no seguinte link:</p>
-        <a href="<?php echo htmlspecialchars($originalFile); ?>" target="_blank">View Original File</a>
+        <a href="<?php echo htmlspecialchars($originalFile); ?>" target="_blank">Ver arquivo original</a>
     </div>
 </body>
 </html>

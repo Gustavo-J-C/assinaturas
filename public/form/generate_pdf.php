@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'form_data.php';
 require_once 'pdf_generator.php';
 
@@ -10,13 +11,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $zapSignResponse = sendToZapSign($formData, $base64Pdf);
 
-    $mainServerResponse = sendToServer($zapSignResponse, $base64Pdf);
+    // $mainServerResponse = sendToServer($zapSignResponse, $base64Pdf);
 
     header('Content-Type: application/json; charset=utf-8');
     if ($zapSignResponse['http_code'] == 200) {
-        $responseBody = json_decode($response['body'], true);
+        $responseBody = json_decode($zapSignResponse['body'], true);
         if (isset($responseBody['original_file'])) {
             $_SESSION['original_file'] = $responseBody['original_file'];
+            $_SESSION['base64Pdf'] = $base64Pdf;
 
             header('Location: display_file.php');
             exit();
@@ -27,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }
     } else {
-        echo "Failed to create document. Response: " . htmlspecialchars($response['body']) . " HTTP Code: " . htmlspecialchars($response['http_code']);
+        echo "Failed to create document. Response: " . htmlspecialchars($zapSignResponse['body']) . " HTTP Code: " . htmlspecialchars($zapSignResponse['http_code']);
     }
 }
 
@@ -69,7 +71,7 @@ function sendToServer($zapSignResponse, $base64Pdf)
 
 function sendToZapSign($formData, $base64Pdf) {
     $apiUrl = "https://sandbox.api.zapsign.com.br/api/v1/docs/";
-    $apiKey = "";
+    $apiKey = "62b24669-88be-4727-850c-d41ad4c3f8b621f1ee55-7dc7-4f25-92f4-977fc0a74ec0";
 
     $data = [
         "name" => "Contrato de " . $formData['nome_beneficiario'],
