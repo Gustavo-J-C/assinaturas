@@ -1,6 +1,6 @@
 <?php
-require_once ('../modules/pdf/fpdf/fpdf.php');
-require_once ('../modules/pdf/fpdi/src/autoload.php');
+require_once ('../../modules/pdf/fpdf/fpdf.php');
+require_once ('../../modules/pdf/fpdi/src/autoload.php');
 
 use setasign\Fpdi\Fpdi;
 
