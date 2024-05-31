@@ -1,7 +1,7 @@
 <?php
 session_start();
 // if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-//     header("Location: index.php");
+//     header("Location: ../login");
 //     exit;
 // }
 ?>
@@ -110,7 +110,7 @@ session_start();
             </div>
             <button type="submit" class="btn-submit">Próximo</button>
         </form>
-        <a href="logout.php">Logout</a>
+        <a href="../login">Logout</a>
     </div>
     <script>
 
@@ -272,7 +272,6 @@ session_start();
                 }
 
                 const data = await response.text();
-                console.log(data); // Você pode tratar a resposta aqui
             } catch (error) {
                 console.error(error.message);
             }
