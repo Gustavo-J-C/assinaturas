@@ -1,0 +1,19 @@
+.table-hover tbody tr:hover {
+    cursor: pointer;
+}
+
+.document-link {
+    cursor: pointer;
+}
+
+.icon-adjust {
+    width: 24px; 
+    height: 24px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+.table-wrapper {
+    max-height: 300px;
+    overflow-x: auto;
+}

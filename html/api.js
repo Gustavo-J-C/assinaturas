@@ -1,0 +1,12 @@
+export const clientes = [
+    { nome: "Registro de Teste", email: "celianio@hotmail.com", rg: "1234567", cpf: "12345678900", nascimento: "1985-05-26", contato: "75982357714", estado_civil: null, cep: "40325190", pai: "Antonio Alberto da Silva", mae: "Célia Maria da Silva", naturalidade: "Feira de Santana", nacionalidade: "Brasileiro", endereco: "Lapinha", numero: "39", bairro: "Liberdade", complemento: "AP201", cidade: "Salvador", estado: "BA" },
+    { nome: "Registro de Teste 2", email: "teste2@hotmail.com", rg: "2345678", cpf: "23456789001", nascimento: "1986-06-27", contato: "75982357715", estado_civil: "Solteiro", cep: "40325191", pai: "João Silva", mae: "Maria Silva", naturalidade: "Feira de Santana", nacionalidade: "Brasileiro", endereco: "Centro", numero: "40", bairro: "Centro", complemento: "AP202", cidade: "Salvador", estado: "BA" },
+    { nome: "Registro de Teste 3", email: "teste3@hotmail.com", rg: "3456789", cpf: "34567890112", nascimento: "1987-07-28", contato: "75982357716", estado_civil: "Casado", cep: "40325192", pai: "Pedro Silva", mae: "Ana Silva", naturalidade: "Salvador", nacionalidade: "Brasileiro", endereco: "Brotas", numero: "41", bairro: "Brotas", complemento: "AP203", cidade: "Salvador", estado: "BA" },
+    { nome: "Registro de Teste 4", email: "teste4@hotmail.com", rg: "4567890", cpf: "45678901223", nascimento: "1988-08-29", contato: "75982357717", estado_civil: "Divorciado", cep: "40325193", pai: "Carlos Silva", mae: "Clara Silva", naturalidade: "Lauro de Freitas", nacionalidade: "Brasileiro", endereco: "Barra", numero: "42", bairro: "Barra", complemento: "AP204", cidade: "Salvador", estado: "BA" },
+    { nome: "Registro de Teste 5", email: "teste5@hotmail.com", rg: "5678901", cpf: "56789012334", nascimento: "1989-09-30", contato: "75982357718", estado_civil: "Viúvo", cep: "40325194", pai: "José Silva", mae: "Juliana Silva", naturalidade: "Camaçari", nacionalidade: "Brasileiro", endereco: "Pituba", numero: "43", bairro: "Pituba", complemento: "AP205", cidade: "Salvador", estado: "BA" }
+]
+
+export const documentos = [
+    { id: 1, nome: 'Contrato de Locação', data: '2023-01-15', link: 'https://zapsign.s3.amazonaws.com/2022/1/pdf/63d19807-cbfa-4b51-8571-215ad0f4eb98/ca42e7be-c932-482c-b70b-92ad7aea04be.pdf' }, { id: 2, nome: 'Termo de Consentimento', data: '2023-05-10', link: 'https://zapsign.s3.amazonaws.com/2022/1/pdf/63d19807-cbfa-4b51-8571-215ad0f4eb98/ca42e7be-c932-482c-b70b-92ad7aea04be.pdf' }
+];
+

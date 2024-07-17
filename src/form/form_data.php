@@ -5,11 +5,11 @@ function getFormData($postData) {
     if ($dtNascimento) {
         $dtNascimentoFormatted = $dtNascimento->format('d-m-Y');
     } else {
-        $dtNascimentoFormatted = $postData['dt_nascimento'];  // If date is not valid, keep original
+        $dtNascimentoFormatted = $postData['dt_nascimento']; 
     }
 
     return [
-        "nome_beneficiario" => $postData['nome'] . ' ' . $postData["sobrenome"],
+        "nome_beneficiario" => $postData['nome'],
         "email_beneficiario" => $postData['email'],
         "CPF" => $postData['cpf'],
         "contato" => $postData['contato'],

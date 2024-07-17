@@ -34,7 +34,7 @@ function generatePDF($formData) {
 
     $tempFileName = tempnam(sys_get_temp_dir(), 'contract');
     $pdf->Output($tempFileName, 'F');
-    // $pdf->Output('D', 'form_data.pdf');
+    $pdf->Output('D', 'form_data.pdf');
     $base64Pdf = base64_encode(file_get_contents($tempFileName));
     unlink($tempFileName);
 

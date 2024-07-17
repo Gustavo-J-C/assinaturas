@@ -30,7 +30,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $formData = getFormData($inputData);
 
-    $base64Pdf = generatePDF($formData);
+    $pdfResult = generatePDF($formData);
+
+    if (isset($pdfResult['error'])) {
+        http_response_code(500);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Failed to generate PDF.',
+            'error_details' => $pdfResult['error']
+        ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        exit();
+    }
+
+    $base64Pdf = $pdfResult[0];
 
     $zapSignResponse = sendToZapSign($formData, $base64Pdf);
 
@@ -42,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             http_response_code(201);
             echo json_encode([
                 'status' => 'success',
+                'response_api' => $responseBody,
                 'original_file' => $originalFileUrl,
                 'base64Pdf' => $base64Pdf
             ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -53,6 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }
     } else {
+        http_response_code(500);
         echo json_encode([
             'status' => 'error',
             'message' => 'Failed to create document.',
@@ -63,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 function validateFormData($inputData) {
-    $requiredFields = ['nome', 'sobrenome', 'email', 'dt_nascimento', 'cpf', 'contato', 'cep', 'endereco', 'bairro', 'cidade', 'estado', 'numero'];
+    $requiredFields = ['nome', 'email', 'dt_nascimento', 'cpf', 'contato', 'cep', 'endereco', 'bairro', 'cidade', 'estado', 'numero'];
     $missingFields = [];
 
     foreach ($requiredFields as $field) {

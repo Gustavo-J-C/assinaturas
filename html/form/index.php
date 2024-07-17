@@ -11,75 +11,36 @@
   <meta name="robots" content="noindex,nofollow" />
   <title>ACEADEB</title>
   <link rel="canonical" href="https://www.wrappixel.com/templates/niceadmin/" />
-  <!-- Favicon icon -->
   <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png" />
-  <!-- This page CSS -->
-
-
-  <!-- Custom CSS -->
   <link href="../../dist/css/style.min.css" rel="stylesheet" />
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body>
-  <!-- ============================================================== -->
-  <!-- Main wrapper - style you can find in pages.scss -->
-  <!-- ============================================================== -->
   <div id="main-wrapper">
-    <!-- ============================================================== -->
-    <!-- Topbar header - style you can find in pages.scss -->
-    <!-- ============================================================== -->
     <header class="topbar">
       <nav class="navbar top-navbar navbar-expand-lg navbar-dark">
         <div class="navbar-header">
-
-          <!-- ============================================================== -->
-          <!-- Logo -->
-          <!-- ============================================================== -->
           <div class="navbar-brand">
             <a href="index.html" class="logo">
-              <!-- Logo icon -->
               <b class="logo-icon">
-                <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
-                <!-- Dark Logo icon -->
                 <img src="../../assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
-                <!-- Light Logo icon -->
                 <img src="../../assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
               </b>
-              <!--End Logo icon -->
-              <!-- Logo text -->
               <span class="logo-text">
-                <!-- dark Logo text -->
                 <img src="../../assets/images/logo-text.png" alt="homepage" class="dark-logo" />
                 <!-- Light Logo text -->
                 <img src="../../assets/images/logo-light-text.png" class="light-logo" alt="homepage" />
               </span>
             </a>
           </div>
-          <!-- ============================================================== -->
-          <!-- End Logo -->
-          <!-- ============================================================== -->
-          <!-- ============================================================== -->
-          <!-- Toggle which is visible on mobile only -->
-          <!-- ============================================================== -->
+
 
         </div>
-        <!-- ============================================================== -->
-        <!-- End Logo -->
-        <!-- ============================================================== -->
 
       </nav>
     </header>
 
     <div class="page-wrapper">
-      <!-- ============================================================== -->
-      <!-- Bread crumb and right sidebar toggle -->
-      <!-- ============================================================== -->
       <div class="page-breadcrumb">
         <div class="row">
           <div class="col-5 align-self-center">
@@ -101,19 +62,8 @@
           </div>
         </div>
       </div>
-      <!-- ============================================================== -->
-      <!-- End Bread crumb and right sidebar toggle -->
-      <!-- ============================================================== -->
-      <!-- ============================================================== -->
-      <!-- Container fluid  -->
-      <!-- ============================================================== -->
       <div class="container-fluid">
-        <!-- -------------------------------------------------------------- -->
-        <!-- Start Page Content -->
-        <!-- -------------------------------------------------------------- -->
         <div class="row">
-          <!-- Example -->
-          <!-- -------------------------------------------------------------- -->
           <div class="col-12">
             <div class="card">
 
@@ -134,9 +84,9 @@
                       <div class="col-md-6">
                         <div class="mb-3">
                           <label for="lastName">
-                            sobrenome : <span class="danger">*</span>
+                            RG: <span class="danger">*</span>
                           </label>
-                          <input type="text" class="form-control required" id="lastName" name="sobrenome" />
+                          <input type="text" class="form-control required" id="rg" name="rg" />
                         </div>
                       </div>
                     </div>
@@ -292,196 +242,10 @@
   <script src="../../dist/js/custom.min.js"></script>
   <script src="../../dist/libs/jquery-steps/build/jquery.steps.min.js"></script>
   <script src="../../dist/libs/jquery-validation/dist/jquery.validate.min.js"></script>
-  <script>
-
-    // Dynamic Manipulation
-    let documentCreated = false;
-    let documentLink;
-
-    var form = $(".validation-wizard").show();
-
-    $(".validation-wizard").steps({
-      headerTag: "h6",
-      bodyTag: "section",
-      transitionEffect: "fade",
-      titleTemplate: '<span class="step">#index#</span> #title#',
-      labels: {
-        finish: "Finalizar",
-        next: "enviar",
-        previous: "voltar"
-      },
-      onStepChanging: function (event, currentIndex, newIndex) {
-        if (currentIndex === 0 && newIndex === 1) {
-          if (form.valid() && !documentCreated) {
-            // Dados do formulário
-
-            var formData = {
-              nome: $('#name').val(),
-              sobrenome: $('#lastName').val(),
-              email: $('#email').val(),
-              cpf: $('#cpf').val(),
-              contato: $('#phone').val(),
-              cep: $('#code').val(),
-              endereco: $('#street').val(),
-              bairro: $('#address').val(),
-              dt_nascimento: $('#birthday').val(),
-              cidade: $('#city').val(),
-              estado: $('#estate').val(),
-              numero: $('#number').val(),
-              data: Date.now()
-            };
-
-            // Mostrar o indicador de carregamento
-            $('#loadingIndicator1').show();
-
-            // Desabilitar botões de navegação
-            $('.actions').hide();
-            $.ajax({
-              url: '../../src/form/generate_pdf.php',
-              type: 'POST',
-              contentType: 'application/json',
-              data: JSON.stringify(formData),
-              success: function (response, textStatus, jqXHR) {
-                if (jqXHR.status === 201) {
-                  documentCreated = true;
-                  documentLink = response.original_file;
-                  $('#loadingIndicator').hide();
-                  $('#documentGenerated').show();
-
-                  $('#viewDocumentLink').attr('href', documentLink);
-                  $('#downloadDocumentLink').attr('href', documentLink);
-                  return true;
-                } else {
-                  alert('Erro ao enviar os dados. Por favor, tente novamente.');
-                }
-              },
-              error: function (xhr, status, error) {
-                // Lógica de tratamento para erro na requisição
-                alert('Erro ao enviar os dados. Por favor, tente novamente.');
-              },
-              complete: function () {
-                $('.actions').show();
-              }
-            });
-          } else if (!form.valid()) {
-            return false;
-          }
-        }
-        return true;
-      },
-      onFinishing: function (event, currentIndex) {
-        return (form.validate().settings.ignore = ":disabled"), form.valid();
-      },
-      onFinished: function (event, currentIndex) {
-
-      },
-    }),
-      $(".validation-wizard").validate({
-        ignore: "input[type=hidden]",
-        errorClass: "text-danger",
-        successClass: "text-success",
-        highlight: function (element, errorClass) {
-          $(element).removeClass(errorClass);
-        },
-        unhighlight: function (element, errorClass) {
-          $(element).removeClass(errorClass);
-        },
-        errorPlacement: function (error, element) {
-          error.insertAfter(element);
-        },
-        rules: {
-          email: {
-            email: true,
-            required: true
-          },
-          nome: {
-            required: true
-          },
-          sobrenome: {
-            required: true
-          },
-          birthday: {
-            required: true,
-            date: true
-          },
-          cpf: {
-            required: true,
-          },
-          contato: {
-            required: true
-          },
-          code: {
-            required: true,
-          },
-          street: {
-            required: true
-          },
-          address: {
-            required: true
-          },
-          city: {
-            required: true
-          },
-          estate: {
-            required: true
-          },
-          phone: {
-            required: true
-          }
-        },
-        messages: {
-          email: {
-            email: "Por favor, insira um endereço de e-mail válido.",
-            required: "O campo de e-mail é obrigatório."
-          },
-          nome: {
-            required: "O campo de nome é obrigatório."
-          },
-          sobrenome: {
-            required: "O campo de sobrenome é obrigatório."
-          },
-          cpf: {
-            required: "O campo de CPF é obrigatório.",
-            cpfBR: "Por favor, insira um CPF válido."
-          },
-          phone: {
-            required: "O campo de contato é obrigatório."
-          },
-          code: {
-            required: "O campo de CEP é obrigatório.",
-            postalcodeBR: "Por favor, insira um CEP válido."
-          },
-          street: {
-            required: "O campo de rua é obrigatório."
-          },
-          address: {
-            required: "O campo de bairro é obrigatório."
-          },
-          city: {
-            required: "O campo de cidade é obrigatório."
-          },
-          estate: {
-            required: "O campo de estado é obrigatório."
-          },
-          number: {
-            required: "O campo de número é obrigatório."
-          },
-          birthday: {
-            required: "O campo de data de nascimento é obrigatório.",
-            date: "Por favor, insira uma data válida no formato dd-mm-yyyy."
-        }
-        }
-      });
-
-    // Trigger finish process when "Enviar" button is clicked
-    $('#submitButton').on('click', function () {
-      var form = $(".validation-wizard");
-      if (form.valid()) {
-        form.steps("next");
-        form.steps("finish");
-      }
-    });
-  </script>
+  <!-- <script src="./index.js" ></script> -->
+  <script src="./dynamicSetup.js"></script>
+  <script src="./formValidation.js"></script>
+  <script src="./ajaxRequests.js"></script>
 </body>
 
 </html>
