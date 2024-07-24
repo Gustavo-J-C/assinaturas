@@ -1,9 +1,11 @@
-import { clientes, documentos } from "./api.js";
+import { clientes, documentos } from "../api.js";
 
 let clients = {};
+let currentRowElement = null;
+let currentCpf = null;
 
-document.addEventListener('DOMContentLoaded', function () {
-    populateTable();
+document.getElementById("buttonCadastro").addEventListener('click', function () {
+    document.getElementById("cadastroModalLabel").innerText = `Cadastrar beneficiário`;
 });
 
 const tableBody = document.querySelector('#tableList tbody');
@@ -62,7 +64,7 @@ function createTableRow(data) {
 
     tr.querySelector('.delete-btn').addEventListener('click', (event) => {
         event.stopPropagation();
-        deleteClient(data.cpf);
+        showConfirmationModal(data.cpf, tr);
     });
 
     tr.addEventListener('click', () => {
@@ -128,6 +130,7 @@ function editClient(clientId) {
     }
 
     // Preencher os campos do modal de cadastro com os dados do cliente
+    document.getElementById("cadastroModalLabel").innerText = `Editar beneficiário ${client.nome}`;
     document.getElementById('form-cpf').value = client.cpf;
     document.getElementById('form-rg').value = client.rg;
     document.getElementById('form-cep').value = client.cep;
@@ -172,8 +175,37 @@ function editClient(clientId) {
 }
 
 
-function deleteClient(clientId) {
-    // Lógica para excluir o cliente
-    console.log(`Excluir cliente com ID ${clientId}`);
-    // Aqui você pode enviar uma requisição para o servidor para deletar o cliente
+// Função para mostrar o modal de confirmação
+function showConfirmationModal(cpf, rowElement) {
+    currentCpf = cpf;
+    currentRowElement = rowElement;
+    $('#confirmationModal').modal('show');
 }
+
+// Função para enviar a requisição DELETE e remover a linha da tabela
+async function deleteClient() {
+    try {
+        // const response = await fetch(`https://api.exemplo.com/clientes/${currentCpf}`, {
+        //     method: 'DELETE'
+        // });
+
+        if (1 == 1) {
+            currentRowElement.remove();
+            $('#confirmationModal').modal('hide');
+        } else {
+            console.error('Erro ao excluir o cliente:', response.statusText);
+            alert(`Erro ao excluir o cliente: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error('Erro ao enviar a requisição DELETE:', error);
+        alert(`Erro ao enviar a requisição DELETE: ${error.message}`);
+    }
+}
+
+document.getElementById('confirmDeleteButton').addEventListener('click', () => {
+    deleteClient();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    populateTable();
+});

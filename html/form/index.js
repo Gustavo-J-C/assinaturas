@@ -78,7 +78,7 @@ $(".validation-wizard").steps({
         // Desabilitar botões de navegação
         $('.actions').hide();
         $.ajax({
-          url: '../../src/form/generate_pdf.php',
+          url: '../../src/generate_pdf.php',
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(formData),

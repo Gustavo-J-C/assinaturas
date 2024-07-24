@@ -1,6 +1,6 @@
 <?php
 require_once 'form_data.php';
-require_once 'pdf_generator3.php';
+require_once 'pdf_generator.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $inputData = json_decode(file_get_contents('php://input'), true);
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'missing_fields' => $missingFields
         ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         exit();
-    } 
+    }
 
     $formData = getFormData($inputData);
 
@@ -76,7 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-function validateFormData($inputData) {
+function validateFormData($inputData)
+{
     $requiredFields = ['nome', 'email', 'dt_nascimento', 'cpf', 'contato', 'cep', 'endereco', 'bairro', 'cidade', 'estado', 'numero'];
     $missingFields = [];
 

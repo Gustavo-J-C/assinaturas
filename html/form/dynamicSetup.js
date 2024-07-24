@@ -23,8 +23,11 @@ document.addEventListener('DOMContentLoaded', function () {
   
       nameField.setAttribute("disabled", true);
       nameField.value = userData.nome;
+      rgField.setAttribute("disabled", true);
       rgField.value = userData.rg;
+      cpfField.setAttribute("disabled", true);
       cpfField.value = userData.cpf;
+      birthdayField.setAttribute("disabled", true);
       birthdayField.value = userData.nascimento;
     } else {
       console.error('userData is missing required fields.');

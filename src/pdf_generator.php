@@ -12,15 +12,13 @@ class PDF extends Fpdi
 
 function generatePDF($formData) {
     try {
-        // Validate formData
         if (!isset($formData['nome_beneficiario'], $formData['CPF'], $formData['endereco'], $formData['numero'], $formData['bairro'], $formData['cidade'], $formData['estado'], $formData['CEP'], $formData['dt_nascimento'], $formData['contato'])) {
             throw new Exception('Dados incompletos fornecidos.');
         }
 
         $pdf = new PDF();
         $pdf->AddPage();
-        $pdf->setSourceFile('./Declaracao_de_prova_de_vida_2.pdf');
-        // $pdf->setSourceFile('./Declaração_ceadeb_Beneficiario.pdf');
+        $pdf->setSourceFile('../../docs/Declaração_ceadeb_Beneficiario.pdf');
         $tplIdx = $pdf->importPage(1);
         $pdf->useTemplate($tplIdx, 0, 0, null, null, true);
         $pdf->SetFont('Arial', '', 12);
@@ -39,7 +37,7 @@ function generatePDF($formData) {
         $pdf->Write(8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $formData['cidade'] . '  ' . date("d/m/Y")));
 
         $tempFileName = sys_get_temp_dir() . '/contract_' . uniqid() . '.pdf';
-        $pdf->Output($tempFileName, 'F');
+        $pdf->Output('F', $tempFileName);
         $base64Pdf = base64_encode(file_get_contents($tempFileName));
         unlink($tempFileName);
 
